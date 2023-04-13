@@ -105,7 +105,7 @@ Setup(void) {
 	gState.font = LoadFontFromMemory(".ttf",
 					 ASSET_START(font),
 					 ASSET_SIZE(font),
-					 50,
+					 PROJECT_FONT_SIZE,
 					 NULL,
 					 0);
 	SetTextureFilter(gState.font.texture, TEXTURE_FILTER_BILINEAR);

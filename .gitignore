@@ -1,4 +1,4 @@
-*.o
 /Session.vim
+/obj
 /paint-squares
 /tags
