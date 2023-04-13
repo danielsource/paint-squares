@@ -1,7 +1,7 @@
 PROJECT_NAME       ?= paint-squares
-PROJECT_SOURCES    ?= paint-squares.c
+PROJECT_SOURCES    ?= paint-squares.c canvas.c
 PROJECT_EXECUTABLE ?= $(PROJECT_NAME)
-PROJECT_FONT_MONOSPACE ?= assets/cascadia-code.ttf
+PROJECT_FONT       ?= assets/cascadia-code.ttf # NOTE: This font needs to be TTF.
 
 CC            ?= gcc
 LD            ?= ld
@@ -12,9 +12,9 @@ LIB_PATHS     ?=
 CPPFLAGS       = -D PROJECT_NAME=\"$(PROJECT_NAME)\"
 CFLAGS         = -std=c99 -Wall -Wextra -Wpedantic -fPIC
 LDFLAGS        =
-LDLIBS         = -lraylib -lm
+LDLIBS         = -lraylib
 
-objects = $(PROJECT_SOURCES:.c=.o) assets/font-monospace.o
+objects = $(PROJECT_SOURCES:.c=.o) assets/font.o
 
 all: debug
 
@@ -32,12 +32,11 @@ clean:
 $(PROJECT_EXECUTABLE): $(objects)
 	$(CC) -o $@ $(objects) $(CFLAGS) $(LDFLAGS) $(LIB_PATHS) $(LDLIBS)
 
-# HACK: Create font object to embed in executable.
-assets/font-monospace.o:
-	$(CP) $(PROJECT_FONT_MONOSPACE) $*
+assets/font.o:
+	$(CP) $(PROJECT_FONT) $*
 	$(LD) -r -b binary -o $@ $*; $(RM) $*
 
-%.o: %.c assets.h Makefile
+%.o: %.c assets.h canvas.h paint-squares.h Makefile
 	$(CC) -c $< -o $@ $(CFLAGS) $(CPPFLAGS) $(INCLUDE_PATHS)
 
 .PHONY: all release debug clean

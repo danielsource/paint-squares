@@ -8,9 +8,9 @@ A program made with [raylib (v4.5)][1] to paint compositions similar to
 How to run this program?
 ------------------------
 The _Makefile_ contains the instructions for compiling this program.
-Make sure you have _raylib_, _make_ and a _C99_ compatible compiler.
-Configure the _Makefile_ accordingly and run `make` to compile and
-`./paint-squares` to execute.
+Make sure you have _raylib_ (v4.5), _make_ and a _C99_ compatible
+compiler. Configure the _Makefile_ accordingly and run `make` to compile
+and `./paint-squares` to execute.
 
 Author
 ------
