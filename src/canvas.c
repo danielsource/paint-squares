@@ -8,10 +8,19 @@
 #include "canvas.h"
 #include "paint-squares.h"
 
+typedef void CanvasSplitter(Vector2 delim, CanvasNode *n);
+
 static CanvasNode * CanvasCreateNode (Rectangle r, CanvasSplitType sp);
 static void         CanvasDeleteNode (CanvasNode *n);
 static void         CanvasDrawNode   (CanvasNode *n);
+static void         CanvasSplitNodeH (Vector2 delim, CanvasNode *n);
+static void         CanvasSplitNodeV (Vector2 delim, CanvasNode *n);
 static void         CanvasSplitNode  (Vector2 delim, CanvasNode *n);
+
+static CanvasSplitter *const gSplitters[CANVAS_SPLIT_COUNT] = {
+	[CANVAS_SPLIT_VERTICAL]   = CanvasSplitNodeV,
+	[CANVAS_SPLIT_HORIZONTAL] = CanvasSplitNodeH
+};
 
 void
 CanvasClear(void) {
@@ -32,7 +41,8 @@ CanvasExit(void) {
 
 void
 CanvasSplit(Vector2 cursor_pos) {
-	CanvasSplitNode(cursor_pos, gState.canvasTree);
+	if (CheckCollisionPointRec(cursor_pos, gState.canvasTree->rect))
+		CanvasSplitNode(cursor_pos, gState.canvasTree);
 }
 
 static CanvasNode *
@@ -72,6 +82,34 @@ CanvasDrawNode(CanvasNode *n) {
 }
 
 void
+CanvasSplitNodeH(Vector2 delim, CanvasNode *n) {
+	Rectangle l = {
+		n->rect.x,     n->rect.y,
+		n->rect.width, delim.y - n->rect.y
+	};
+	Rectangle r = {
+		n->rect.x,     delim.y,
+		n->rect.width, n->rect.height - l.height
+	};
+	n->left = CanvasCreateNode(l, CANVAS_SPLIT_VERTICAL);
+	n->right = CanvasCreateNode(r, CANVAS_SPLIT_VERTICAL);
+}
+
+void
+CanvasSplitNodeV(Vector2 delim, CanvasNode *n) {
+	Rectangle l = {
+		n->rect.x,           n->rect.y,
+		delim.x - n->rect.x, n->rect.height
+	};
+	Rectangle r = {
+		delim.x,                 n->rect.y,
+		n->rect.width - l.width, n->rect.height
+	};
+	n->left = CanvasCreateNode(l, CANVAS_SPLIT_HORIZONTAL);
+	n->right = CanvasCreateNode(r, CANVAS_SPLIT_HORIZONTAL);
+}
+
+void
 CanvasSplitNode(Vector2 delim, CanvasNode *n) {
 	if (!n)
 		return;
@@ -83,31 +121,5 @@ CanvasSplitNode(Vector2 delim, CanvasNode *n) {
 		CanvasSplitNode(delim, n->right);
 		return;
 	}
-	Rectangle l, r;
-	switch (n->split) {
-	case CANVAS_SPLIT_VERTICAL:
-		l = (Rectangle){
-			n->rect.x,           n->rect.y,
-				delim.x - n->rect.x, n->rect.height
-		};
-		r = (Rectangle){
-			delim.x,                 n->rect.y,
-				n->rect.width - l.width, n->rect.height
-		};
-		n->left = CanvasCreateNode(l, CANVAS_SPLIT_HORIZONTAL);
-		n->right = CanvasCreateNode(r, CANVAS_SPLIT_HORIZONTAL);
-		break;
-	case CANVAS_SPLIT_HORIZONTAL:
-		l = (Rectangle){
-			n->rect.x,     n->rect.y,
-				n->rect.width, delim.y - n->rect.y
-		};
-		r = (Rectangle){
-			n->rect.x,     delim.y,
-				n->rect.width, n->rect.height - l.height
-		};
-		n->left = CanvasCreateNode(l, CANVAS_SPLIT_VERTICAL);
-		n->right = CanvasCreateNode(r, CANVAS_SPLIT_VERTICAL);
-		break;
-	}
+	gSplitters[n->split](delim, n);
 }

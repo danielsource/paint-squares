@@ -13,7 +13,8 @@ typedef enum {
 
 typedef enum {
 	CANVAS_SPLIT_VERTICAL,
-	CANVAS_SPLIT_HORIZONTAL
+	CANVAS_SPLIT_HORIZONTAL,
+	CANVAS_SPLIT_COUNT
 } CanvasSplitType;
 
 typedef struct CanvasNode {

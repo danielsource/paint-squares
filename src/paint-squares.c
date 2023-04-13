@@ -23,7 +23,7 @@ GlobalState gState = {
 		[CANVAS_CLR_BORDER] = {0x05, 0x0a, 0x06, 0xff}, // #050a06
 		[CANVAS_CLR_1]      = {0xdf, 0x29, 0x1e, 0xff}, // #df291e
 		[CANVAS_CLR_2]      = {0xee, 0xdd, 0x6f, 0xff}, // #eedd6f
-		[CANVAS_CLR_3]      = {0x01, 0x58, 0x9b, 0xff}, // #01589b
+		[CANVAS_CLR_3]      = {0x01, 0x58, 0x9b, 0xff}  // #01589b
 	},
 	.winWidth = 640,
 	.winHeight = 360,
@@ -47,11 +47,11 @@ static const char *const gProjectDescription =
 
 static const KeyBinding gKeyBindings[] = {
 	{.key = KEY_ESCAPE, .cb = CanvasExit},
-	{.key = KEY_C,      .cb = CanvasClear},
+	{.key = KEY_C,      .cb = CanvasClear}
 };
 
 static const MouseBinding gMouseBindings[] = {
-	{.btn = MOUSE_BUTTON_LEFT, .cb = CanvasSplit},
+	{.btn = MOUSE_BUTTON_LEFT, .cb = CanvasSplit}
 };
 
 void
@@ -99,6 +99,7 @@ void
 Setup(void) {
 	signal(SIGINT, SignalHandler);
 	SetTraceLogLevel(LOG_WARNING);
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE); // TEMP: debug
 	InitWindow(gState.winWidth, gState.winHeight, gState.winTitle);
 	SetExitKey(KEY_NULL);
 	SetTargetFPS(gState.targetFPS);
