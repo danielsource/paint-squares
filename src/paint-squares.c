@@ -1,6 +1,7 @@
 #include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #include "raylib.h"
 
@@ -10,12 +11,13 @@
 
 #define LENGTH(array) ((int)(sizeof (array) / sizeof *(array)))
 
-static void Cleanup       (void);
-static void Draw          (void);
-static void HandleInput   (void);
-static void Run           (void);
-static void Setup         (void);
-static void SignalHandler (int sig);
+static void Cleanup                (void);
+static void Draw                   (void);
+static void HandleInput            (void);
+static void Run                    (void);
+static void Setup                  (void);
+static void SignalHandler          (int sig);
+static void UpdateWindowDimensions (void);
 
 GlobalState gState = {
 	.canvasColors = {
@@ -25,6 +27,7 @@ GlobalState gState = {
 		[CANVAS_CLR_2]      = {0xee, 0xdd, 0x6f, 0xff}, // #eedd6f
 		[CANVAS_CLR_3]      = {0x01, 0x58, 0x9b, 0xff}  // #01589b
 	},
+	.canvasBorderWidth = 5, 
 	.winWidth = 640,
 	.winHeight = 360,
 	.winTitle = PROJECT_NAME,
@@ -92,14 +95,16 @@ HandleInput(void) {
 void
 Run(void) {
 	HandleInput();
+	UpdateWindowDimensions();
 	Draw();
 }
 
 void
 Setup(void) {
 	signal(SIGINT, SignalHandler);
+	srand(time(NULL));
 	SetTraceLogLevel(LOG_WARNING);
-	SetConfigFlags(FLAG_WINDOW_RESIZABLE); // TEMP: debug
+	SetConfigFlags(FLAG_WINDOW_RESIZABLE);
 	InitWindow(gState.winWidth, gState.winHeight, gState.winTitle);
 	SetExitKey(KEY_NULL);
 	SetTargetFPS(gState.targetFPS);
@@ -119,11 +124,18 @@ SignalHandler(int sig) {
 		CanvasExit();
 }
 
+void
+UpdateWindowDimensions(void) {
+	gState.winWidth = GetScreenWidth();
+	gState.winHeight = GetScreenHeight();
+}
+
 int
 main(int argc, char **argv) {
 	if (argc > 1) {
 		fputs(gProjectDescription, stderr);
-		return TextIsEqual(argv[1], "--help") ? EXIT_SUCCESS : EXIT_FAILURE;
+		return TextIsEqual(argv[1], "--help")
+			? EXIT_SUCCESS : EXIT_FAILURE;
 	}
 	fputs(PROJECT_NAME ": Use option '--help' to show more "
 	      "information.\n", stderr);

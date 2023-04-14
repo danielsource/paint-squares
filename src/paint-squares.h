@@ -10,7 +10,8 @@ typedef void KeyBindingCallback   (void);
 typedef void MouseBindingCallback (Vector2 cursorPos);
 
 typedef struct {
-	CanvasNode *canvasTree;
+	CanvasTree *canvas;
+	int canvasBorderWidth;
 	Color canvasColors[CANVAS_COLOR_COUNT];
 	Font font;
 	int winWidth, winHeight;

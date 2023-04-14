@@ -4,8 +4,8 @@ PROJECT_EXECUTABLE ?= $(PROJECT_NAME)
 PROJECT_FONT       ?= assets/cascadia-code.ttf # NOTE: This font needs to be TTF.
 PROJECT_FONT_SIZE  ?= 50
 
-CC            ?= gcc
-LD            ?= ld
+CC             = gcc
+LD             = ld
 RM            ?= rm -f
 CP            ?= cp
 MKDIR         ?= mkdir
@@ -32,6 +32,9 @@ debug: $(PROJECT_EXECUTABLE)
 clean:
 	$(RM) $(PROJECT_EXECUTABLE) $(objects)
 
+test: debug
+	./paint-squares
+
 $(PROJECT_EXECUTABLE): $(objects)
 	$(CC) -o $@ $(objects) $(CFLAGS) $(LDFLAGS) $(LIB_PATHS) $(LDLIBS)
 
@@ -45,4 +48,4 @@ obj/%.o: src/%.c src/assets.h src/canvas.h src/paint-squares.h Makefile | obj
 obj:
 	$(MKDIR) $@
 
-.PHONY: all release debug clean
+.PHONY: all release debug clean test

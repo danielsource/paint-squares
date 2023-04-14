@@ -14,17 +14,21 @@ typedef enum {
 typedef enum {
 	CANVAS_SPLIT_VERTICAL,
 	CANVAS_SPLIT_HORIZONTAL,
-	CANVAS_SPLIT_COUNT
 } CanvasSplitType;
 
 typedef struct CanvasNode {
-	Rectangle rect;
-	CanvasColor colorId;
+	int split_pos;
 	CanvasSplitType split;
+	CanvasColor colorId;
 	struct CanvasNode *left, *right;
-} CanvasNode;
+} CanvasNode, CanvasTree;
 
-void CanvasClear (void);
-void CanvasDraw  (void);
-void CanvasExit  (void);
-void CanvasSplit (Vector2 cursor_pos);
+typedef struct {
+	Rectangle left, right;
+} CanvasNodeAreas;
+
+void CanvasClear            (void);
+void CanvasDraw             (void);
+void CanvasExit             (void);
+void CanvasSplit            (Vector2 cursor_pos);
+void CanvasUpdateDimensions (void);
