@@ -27,7 +27,12 @@ CanvasClear(void) {
 
 void
 CanvasDraw(void) {
-	Rectangle area = {0, 0, gState.winWidth, gState.winHeight};
+	const Rectangle area = {
+		0,
+		0,
+		gState.winWidth,
+		gState.winHeight
+	};
 	CanvasDrawNode(gState.canvas, area);
 }
 
@@ -125,6 +130,14 @@ CanvasGetNodeAreasV(CanvasNode *n, Rectangle parentArea) {
 
 CanvasColor
 CanvasGetSomeColor(void) {
+	const int colorCount = CANVAS_COLOR_COUNT - CANVAS_CLR_1;
+	const int colorBackgroundChance = 13; // 13/16 chance for the
+					      // color to be the default
+					      // background color
+	int randomColor = rand() % (colorCount + colorBackgroundChance);
+	if (randomColor >= colorBackgroundChance)
+		return randomColor - colorBackgroundChance
+			+ CANVAS_CLR_1;
 	return CANVAS_CLR_BG;
 }
 
