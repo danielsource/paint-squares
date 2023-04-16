@@ -5,7 +5,6 @@
 
 #include "raylib.h"
 
-#include "assets.h"
 #include "canvas.h"
 #include "paint-squares.h"
 
@@ -60,7 +59,6 @@ static const MouseBinding gMouseBindings[] = {
 void
 Cleanup(void) {
 	CanvasClear();
-	UnloadFont(gState.font);
 	CloseWindow();
 }
 
@@ -108,13 +106,6 @@ Setup(void) {
 	InitWindow(gState.winWidth, gState.winHeight, gState.winTitle);
 	SetExitKey(KEY_NULL);
 	SetTargetFPS(gState.targetFPS);
-	gState.font = LoadFontFromMemory(".ttf",
-					 ASSET_START(font),
-					 ASSET_SIZE(font),
-					 PROJECT_FONT_SIZE,
-					 NULL,
-					 0);
-	SetTextureFilter(gState.font.texture, TEXTURE_FILTER_BILINEAR);
 	CanvasClear();
 }
 

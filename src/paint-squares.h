@@ -13,7 +13,6 @@ typedef struct {
 	CanvasTree *canvas;
 	int canvasBorderWidth;
 	Color canvasColors[CANVAS_COLOR_COUNT];
-	Font font;
 	int winWidth, winHeight;
 	const char *winTitle;
 	int targetFPS;
